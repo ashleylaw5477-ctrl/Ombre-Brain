@@ -565,6 +565,12 @@ class Dehydrator:
             cleaned = raw.strip()
             if cleaned.startswith("```"):
                 cleaned = cleaned.split("\n", 1)[-1].rsplit("```", 1)[0]
+            cleaned = cleaned.strip()
+            # extract JSON array if surrounded by extra text
+            start = cleaned.find("[")
+            end = cleaned.rfind("]")
+            if start != -1 and end != -1 and end > start:
+                cleaned = cleaned[start:end+1]
             items = json.loads(cleaned)
         except (json.JSONDecodeError, IndexError, ValueError):
             logger.warning(f"Diary digest JSON parse failed / JSON 解析失败: {raw[:200]}")
