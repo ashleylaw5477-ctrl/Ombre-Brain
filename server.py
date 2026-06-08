@@ -494,6 +494,21 @@ async def _merge_or_create(
 # With args: search by keyword + emotion coordinates
 # 有参数：按关键词+情感坐标检索记忆
 # =============================================================
+
+# Track whether breath has been called in this server process session
+_breath_first_call = True
+
+def _load_claude_prompt() -> str:
+    """Load CLAUDE_PROMPT.md from the same directory as server.py."""
+    try:
+        prompt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "CLAUDE_PROMPT.md")
+        if os.path.exists(prompt_path):
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                return f.read()
+    except Exception:
+        pass
+    return ""
+
 @mcp.tool()
 async def breath(
     query: str = "",
@@ -763,13 +778,22 @@ async def breath(
         except Exception as e:
             logger.warning(f"Random surfacing failed / 随机浮现失败: {e}")
 
-    if not results:
-        await _fire_webhook("breath", {"mode": "empty", "matches": 0})
-        return "未找到相关记忆。"
+    global _breath_first_call
 
-    final_text = "\n---\n".join(results)
-    await _fire_webhook("breath", {"mode": "ok", "matches": len(matches), "chars": len(final_text)})
-    return final_text
+    if not results:
+        memory_text = "权重池平静，没有需要处理的记忆。"
+    else:
+        memory_text = "\n---\n".join(results)
+
+    await _fire_webhook("breath", {"mode": "ok" if results else "empty", "matches": len(matches) if results else 0, "chars": len(memory_text)})
+
+    if _breath_first_call:
+        _breath_first_call = False
+        claude_prompt = _load_claude_prompt()
+        if claude_prompt:
+            return f"{memory_text}\n\n---\n📋 **系统使用指南（仅首次加载）**\n\n{claude_prompt}"
+
+    return memory_text
 
 
 # =============================================================
