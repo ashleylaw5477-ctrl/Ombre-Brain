@@ -72,7 +72,7 @@ dehydration:
   #   LM Studio:   http://localhost:1234/v1
   #   vLLM:        http://localhost:8000/v1
   #   Gemini:      https://generativelanguage.googleapis.com/v1beta/openai
-  api_key: "sk-eaad02bfb20743bf9e5b98294c67880b"    # ⚠️ Use env var OMBRE_COMPRESS_API_KEY instead / 请使用环境变量 OMBRE_COMPRESS_API_KEY
+  #   api_key: ""    # ⚠️ Use env var OMBRE_COMPRESS_API_KEY instead / 请使用环境变量 OMBRE_COMPRESS_API_KEY
   max_tokens: 2048
   temperature: 0.1
 
@@ -93,9 +93,9 @@ decay:
 embedding:
   enabled: true                   # Enable embedding / 启用向量化
   backend: "api"                  # 只支持 api（OpenAI 兼容端点）
-  model: "gemini-embedding-001"   # 云端模型名（如 gemini-embedding-001）
-  base_url: "https://generativelanguage.googleapis.com/v1beta/openai/"
-  api_key: "sk-phckzvyyvaypnntecqvyavyecepyeklqdaahnkkemjclnagq"                   # Use OMBRE_EMBED_API_KEY / 使用 OMBRE_EMBED_API_KEY
+  model: "BAAI/bge-m3"   # 云端模型名（如 gemini-embedding-001）
+  base_url: "https://api.siliconflow.cn/v1"
+  #   api_key: ""                   # Use OMBRE_EMBED_API_KEY / 使用 OMBRE_EMBED_API_KEY
 
 # --- Scoring weights / 检索权重参数 ---
 # total = topic(×4) + emotion(×2) + time(×1.5) + importance(×1)
