@@ -9,7 +9,7 @@
 # streamable-http: remote use (HTTP, tunnel/CDN/proxy friendly)
 # stdio: 本地使用（Claude Desktop，直接管道通信）
 # streamable-http: 远程使用（标准 HTTP，对隧道/CDN/代理友好）
-transport: "stdio"
+transport: "streamable-http"
 
 # --- Log level / 日志级别 ---
 log_level: "INFO"
